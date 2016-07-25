@@ -13,11 +13,11 @@ if(!window.CustomEvent) {
 	AppsFlyer.prototype.initSdk = function (args) {
     	cordova.exec(null, null, "AppsFlyerPlugin", "initSdk", args);
 	};
-	
+
 	AppsFlyer.prototype.setCurrencyCode = function (currencyId) {
     	cordova.exec(null, null, "AppsFlyerPlugin", "setCurrencyCode", [currencyId]);
 	};
-	
+
 	AppsFlyer.prototype.setAppUserId = function (customerUserId) {
     	cordova.exec(null, null, "AppsFlyerPlugin", "setAppUserId", [customerUserId]);
 	};
@@ -30,7 +30,7 @@ if(!window.CustomEvent) {
            "getAppsFlyerUID",
         []);
 	};
-	
+
 	AppsFlyer.prototype.sendTrackingWithEvent = function(eventName, eventValue) {
     	cordova.exec(null, null, "AppsFlyerPlugin", "sendTrackingWithEvent", [eventName,eventValue]);
 	};
@@ -43,7 +43,11 @@ if(!window.CustomEvent) {
         var data = conversionData,
             event;
         if (typeof data === "string") {
-            data = JSON.parse(conversionData);
+            try {
+              data = JSON.parse(conversionData);
+            } catch(err) {
+              console.error("Could not parse conversion data, treating as a string. Data: " + conversionData + ". Error: " + err);
+            }
         }
 		event = new CustomEvent('onInstallConversionDataLoaded', {'detail': data});
 		global.document.dispatchEvent(event);
@@ -67,7 +71,7 @@ if(!window.CustomEvent) {
 //    var devKey = "xxXXXXXxXxXXXXxXXxxxx8";  // your AppsFlyer devKey
 //    args.push(devKey);
 //    var userAgent = window.navigator.userAgent.toLowerCase();
-//                          
+//
 //    if (/iphone|ipad|ipod/.test( userAgent )) {
 //        var appId = "123456789";            // your ios app id in app store
 //        args.push(appId);
